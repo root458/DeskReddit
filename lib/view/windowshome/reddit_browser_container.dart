@@ -15,7 +15,6 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
 
   final _controller = WebviewController();
   final _textController = TextEditingController();
-  bool _isWebviewSuspended = false;
 
   @override
   void initState() {
@@ -39,7 +38,7 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
 
       await _controller.setBackgroundColor(Colors.transparent);
       await _controller.setPopupWindowPolicy(WebviewPopupWindowPolicy.deny);
-      await _controller.loadUrl('https://flutter.dev');
+      await _controller.loadUrl('https://reddit.com');
 
       if (!mounted) return;
       setState(() {});
@@ -80,54 +79,32 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
         ),
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Card(
-              elevation: 0,
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: 'URL',
-                    contentPadding: const EdgeInsets.all(10.0),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.refresh),
-                      onPressed: () {
-                        _controller.reload();
-                      },
-                    )),
-                textAlignVertical: TextAlignVertical.center,
-                controller: _textController,
-                onSubmitted: (val) {
-                  _controller.loadUrl(val);
-                },
-              ),
-            ),
-            Expanded(
-                child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Stack(
-                      children: [
-                        Webview(
-                          _controller,
-                          permissionRequested: _onPermissionRequested,
-                        ),
-                        StreamBuilder<LoadingState>(
-                            stream: _controller.loadingState,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData &&
-                                  snapshot.data == LoadingState.loading) {
-                                return const LinearProgressIndicator();
-                              } else {
-                                return const SizedBox();
-                              }
-                            }),
-                      ],
-                    ))),
-          ],
-        ),
+      return Column(
+        children: [
+          Expanded(
+              child: Card(
+                  color: Colors.transparent,
+                  elevation: 0,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Stack(
+                    children: [
+                      Webview(
+                        _controller,
+                        permissionRequested: _onPermissionRequested,
+                      ),
+                      StreamBuilder<LoadingState>(
+                          stream: _controller.loadingState,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.data == LoadingState.loading) {
+                              return const LinearProgressIndicator();
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
+                    ],
+                  ))),
+        ],
       );
     }
   }
@@ -135,31 +112,7 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        tooltip: _isWebviewSuspended ? 'Resume webview' : 'Suspend webview',
-        onPressed: () async {
-          if (_isWebviewSuspended) {
-            await _controller.resume();
-          } else {
-            await _controller.suspend();
-          }
-          setState(() {
-            _isWebviewSuspended = !_isWebviewSuspended;
-          });
-        },
-        child: Icon(_isWebviewSuspended ? Icons.play_arrow : Icons.pause),
-      ),
-      appBar: AppBar(
-          title: StreamBuilder<String>(
-        stream: _controller.title,
-        builder: (context, snapshot) {
-          return Text(
-              snapshot.hasData ? snapshot.data! : 'WebView (Windows) Example');
-        },
-      )),
-      body: Center(
-        child: compositeView(),
-      ),
+      body: compositeView(),
     );
   }
 
