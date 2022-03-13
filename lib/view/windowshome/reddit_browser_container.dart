@@ -14,7 +14,6 @@ class ReddBrowserContainer extends StatefulWidget {
 class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
 
   final _controller = WebviewController();
-  final _textController = TextEditingController();
 
   @override
   void initState() {
@@ -23,17 +22,10 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
   }
 
   Future<void> initPlatformState() async {
-    // Optionally initialize the webview environment using
-    // a custom user data directory
-    // and/or a custom browser executable directory
-    // and/or custom chromium command line flags
-    //await WebviewController.initializeEnvironment(
-    //    additionalArguments: '--show-fps-counter');
-
+    
     try {
       await _controller.initialize();
       _controller.url.listen((url) {
-        _textController.text = url;
       });
 
       await _controller.setBackgroundColor(Colors.transparent);

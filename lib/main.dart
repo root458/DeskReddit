@@ -1,5 +1,5 @@
 import 'package:deskreddit/view/home_page.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return FluentApp(
       title: 'r/DeskReddit',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        activeColor: Colors.blue,
       ),
       home: const HomePage(),
     );
