@@ -2,5 +2,5 @@
 
 An unofficial Reddit Desktop app.
 
-Available on Windows
+Available on Windows,
 Coming soon on Linux
