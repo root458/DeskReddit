@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_windows/webview_windows.dart';
 
@@ -38,7 +38,7 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (_) => AlertDialog(
+            builder: (_) => ContentDialog(
                   title: const Text('Error'),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -63,21 +63,16 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
 
   Widget compositeView() {
     if (!_controller.value.isInitialized) {
-      return const Text(
-        'Not Initialized',
-        style: TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
+      return const Center(
+        child: ProgressRing(),
       );
     } else {
       return Column(
         children: [
           Expanded(
               child: Card(
-                  color: Colors.transparent,
+                  backgroundColor: Colors.transparent,
                   elevation: 0,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: Stack(
                     children: [
                       Webview(
@@ -89,7 +84,7 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData &&
                                 snapshot.data == LoadingState.loading) {
-                              return const LinearProgressIndicator();
+                              return const Center(child: ProgressRing());
                             } else {
                               return const SizedBox();
                             }
@@ -103,8 +98,8 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: compositeView(),
+    return ScaffoldPage(
+      content: compositeView(),
     );
   }
 
@@ -112,7 +107,7 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
       String url, WebviewPermissionKind kind, bool isUserInitiated) async {
     final decision = await showDialog<WebviewPermissionDecision>(
       context: navigatorKey.currentContext!,
-      builder: (BuildContext context) => AlertDialog(
+      builder: (BuildContext context) => ContentDialog(
         title: const Text('WebView permission requested'),
         content: Text('WebView has requested permission \'$kind\''),
         actions: <Widget>[
