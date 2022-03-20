@@ -70,9 +70,8 @@ class _ReddBrowserContainerState extends State<ReddBrowserContainer> {
       return Column(
         children: [
           Expanded(
-              child: Card(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
+              child: Container(
+                  color: Colors.transparent,
                   child: Stack(
                     children: [
                       Webview(
